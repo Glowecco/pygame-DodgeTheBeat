@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.startImage = pygame.image.load('playerStand/rabbit -1.png').convert_alpha()
         self.startImage = pygame.transform.scale(self.startImage, (27, 42))
         self.image = self.startImage
-        self.rect = self.image.get_rect(midbottom = (500,350))
+        self.rect = self.image.get_rect(midbottom = (400,350))
         #save value
         self.animation()
     def animation(self):
@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom == 400:
             self.rect.y += self.gravity
         else:
-            self.gravity += 0.3
+            self.gravity += 0.4
             self.rect.y += self.gravity
 
         if 420 > self.rect.bottom >= 400 and 740>self.rect.x>33: 
@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
-            self.gravity = -7
+            self.gravity = -9
         #left and right
         if keys[pygame.K_LEFT]:
             self.rect.left -= 4
