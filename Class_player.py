@@ -3,6 +3,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, stand, jump, run):
         super().__init__()
+        
         #variable
         self.playerCostume_Index = 0
         self.playerCostume_Index_2 = 0
@@ -14,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.stand = stand
         self.jump = jump
         self.run = run
+        self.ALIVE = True
 
         #setup
         self.startImage = pygame.image.load('playerStand/rabbit -1.png').convert_alpha()
@@ -63,7 +65,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = 400
     
         if self.rect.bottom >600:
-            exit() 
+            self.ALIVE = False
     def movements(self):
         keys = pygame.key.get_pressed()
         #jump
