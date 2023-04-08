@@ -1,8 +1,8 @@
 import pygame
+from sys import exit
 from Class_player import Player
 from menu import startMenu
 from game import level1
-from sys import exit
 
 #window setup
 pygame.init()
