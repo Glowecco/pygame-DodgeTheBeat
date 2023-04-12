@@ -46,7 +46,7 @@ def level1(screen, clock):
         screen.blit(platform, (50,400))
 
         #update and draw obstacles
-        obstacles.update(screen)
+        obstacles.update(screen, start_time)
         #update and draw player
         player.update()
         player.draw(screen)
@@ -54,12 +54,26 @@ def level1(screen, clock):
 
         #Collsion (Gameover)
         Alive = player_sprite.ALIVE
-        for i in range(1,3):
+        for i in range(1,7):
             obstacles_sprite.setRect_fireball(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
                 print('collided!'+str(i))
-
+                #Alive = False
+                pass
+        for i in range(1,3):
+            obstacles_sprite.setRect_firepillar(i)
+            collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
+            if collision:
+                print('collide PILLAR'+str(i))
+                #Alive = False
+                pass
+        obstacles_sprite.setRect_fireground()
+        collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
+        if collision:
+            print('collide FIRE GROUND')
+            #Alive = False
+            pass
         #fps
         clock.tick(60)
     bgm1.stop()

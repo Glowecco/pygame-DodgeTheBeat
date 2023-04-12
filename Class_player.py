@@ -13,6 +13,8 @@ class Player(pygame.sprite.Sprite):
         self.running = False
         self.gravity = -1
         self.ALIVE = True
+        self.higher = False
+        self.doublejump_available = False
 
         #setup image and rect
         self.image = pygame.image.load('playerStand/rabbit -1.png').convert_alpha()
@@ -24,16 +26,16 @@ class Player(pygame.sprite.Sprite):
         self.run = []
         for i in range(1, 9):
             filename = f"{'playerStand/rabbit -'}{i}{'.png'}"
-            temp_image = pygame.image.load(filename).convert_alpha()
-            temp_image = pygame.transform.scale(temp_image, (27, 42))
-            self.stand.append(temp_image)
+            temporary_image = pygame.image.load(filename).convert_alpha()
+            temporary_image = pygame.transform.scale(temporary_image, (27, 42))
+            self.stand.append(temporary_image)
         self.jump = pygame.image.load('playerJump/rabbit jump -2.png').convert_alpha()
         self.jump = pygame.transform.scale(self.jump, (28, 45))
         for i in range(1, 11):
             filename = f"{'playerRun/rabbit run -'}{i}{'.png'}"
-            temp_image = pygame.image.load(filename).convert_alpha()
-            temp_image = pygame.transform.scale(temp_image, (30, 43.5))
-            self.run.append(temp_image)
+            temporary_image = pygame.image.load(filename).convert_alpha()
+            temporary_image = pygame.transform.scale(temporary_image, (30, 43.5))
+            self.run.append(temporary_image)
 
     def animation(self):
         #stand
@@ -69,6 +71,7 @@ class Player(pygame.sprite.Sprite):
     def physicsLogic(self):
         if self.rect.bottom == 400:
             self.rect.y += self.gravity
+            self.doublejump_available = True
 
         if 420 > self.rect.bottom >= 400 and 740>self.rect.x>33: 
             self.rect.bottom = 400
@@ -84,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
-            self.gravity = -9
+            self.gravity = -8.5
         #left and right
         if keys[pygame.K_LEFT]:
             self.rect.left -= 4
