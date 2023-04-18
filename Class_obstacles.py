@@ -8,14 +8,22 @@ class Obstacle(pygame.sprite.Sprite):
         self.fireballCostume_Index = 0
         self.animationSpeed_1 = 0.3
         self.firepillarCostume_Index = 0
-        self.animationSpeed_2 = 0.25
+        self.animationSpeed_2 = 0.2
         self.firegroundCostume_Index = 0
-        self.animationSpeed_3 = 0.4
+        self.animationSpeed_3 = 0.75
+        self.firedropCostume_Index_Right = 0
+        self.animationSpeed_4 = 1
+        self.firedropCostume_Index_Left = 0
+        self.animationSpeed_5 = 1
         self.coords_under = (5,400)
         self.coords_top = (800,355)
+        self.coords_MeteorR = (680, 330)
+        self.coords_MeteorL = (100,330)
         self.coords_untouched = (0,0)
         self.activate_1 = False
         self.activate_2 = False
+        self.activate_3 = False
+        self.activate_4 = False
         self.alpha = 400
         self.runthis = False
 
@@ -23,9 +31,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.temporary_fireball = pygame.image.load('fires/fireball/Fireball_1.png').convert_alpha()
         self.temporary_fireball = pygame.transform.scale(self.temporary_fireball, (32, 32))
         self.temporary_firepillar = pygame.image.load('fires/firepillar/pillar_1.png').convert_alpha()
-        self.temporary_firepillar = pygame.transform.scale(self.temporary_firepillar, (192, 500))
+        self.temporary_firepillar = pygame.transform.scale(self.temporary_firepillar, (120, 500))
         self.temporary_fireground = pygame.image.load('fires/flameFloor/fireGround_1.png').convert_alpha()
         self.temporary_fireground = pygame.transform.scale(self.temporary_fireground, (750,60))
+        self.temporary_firedrop = pygame.image.load('fires/firedrop/firedrop_1.png').convert_alpha()
+        self.temporary_firedrop = pygame.transform.scale(self.temporary_firedrop, (150,528))
+        self.temporary_firedrop = pygame.transform.rotate(self.temporary_firedrop, -60)
+        self.temporary_firedrop_flipped = pygame.transform.flip(self.temporary_firedrop, True, False)
 
         #setup rects
         self.rect_fireball_1 = self.temporary_fireball.get_rect(midbottom = self.coords_under)
@@ -37,6 +49,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect_firepillar_1 = self.temporary_firepillar.get_rect(midbottom = self.coords_untouched)
         self.rect_firepillar_2 = self.temporary_firepillar.get_rect(midbottom = self.coords_untouched)
         self.rect_fireground = self.temporary_fireground.get_rect(midbottom = self.coords_untouched)
+        self.rect_firedrop_right = self.temporary_firedrop.get_rect(midbottom = self.coords_MeteorR)
+        self.rect_firedrop_left = self.temporary_firedrop_flipped.get_rect(midbottom = self.coords_MeteorL)
 
         #load animation cuts
         self.fireball = []
@@ -50,7 +64,7 @@ class Obstacle(pygame.sprite.Sprite):
         for i in range(1, 11):
             self.filename = 'fires/firepillar/pillar_' + str(i) + '.png'
             self.temporary_firepillar = pygame.image.load(self.filename).convert_alpha()
-            self.temporary_firepillar = pygame.transform.scale(self.temporary_firepillar, (192, 500))
+            self.temporary_firepillar = pygame.transform.scale(self.temporary_firepillar, (120, 500))
             self.firepillar.append(self.temporary_firepillar)
         
         self.fireground = []
@@ -59,6 +73,17 @@ class Obstacle(pygame.sprite.Sprite):
             self.temporary_fireground = pygame.image.load(self.filename).convert_alpha()
             self.temporary_fireground = pygame.transform.scale(self.temporary_fireground, (750,60))
             self.fireground.append(self.temporary_fireground)
+
+        self.firedrop = []
+        self.firedrop_flipped = []
+        for i in range(1, 31):
+            self.filename = 'fires/firedrop/firedrop_' + str(i) + '.png'
+            self.temporary_firedrop = pygame.image.load(self.filename).convert_alpha()
+            self.temporary_firedrop = pygame.transform.scale(self.temporary_firedrop, (150,528))
+            self.temporary_firedrop = pygame.transform.rotate(self.temporary_firedrop, -60)
+            self.firedrop.append(self.temporary_firedrop)
+            self.temporary_firedrop = pygame.transform.flip(self.temporary_firedrop, True, False)
+            self.firedrop_flipped.append(self.temporary_firedrop)
     def animation(self):
         self.image_fireball = self.fireball[int(self.fireballCostume_Index)]
         self.fireballCostume_Index += self.animationSpeed_1
@@ -77,7 +102,7 @@ class Obstacle(pygame.sprite.Sprite):
         
         if self.activate_2 == True:
             self.image_fireground = self.fireground[int(self.firegroundCostume_Index)]
-            self.firegroundCostume_Index += self.animationSpeed_2
+            self.firegroundCostume_Index += self.animationSpeed_3
             self.image_fireground.set_alpha(self.alpha)
             if self.firegroundCostume_Index >= 7.5:
                 self.firegroundCostume_Index = 0
@@ -85,17 +110,34 @@ class Obstacle(pygame.sprite.Sprite):
             if self.alpha < 0:
                 pass
             else:
-                self.alpha -= 20
+                self.alpha -= 40
+
+        if self.activate_3 == True:
+            self.image_firedrop = self.firedrop[int(self.firedropCostume_Index_Right)]
+            self.firedropCostume_Index_Right += self.animationSpeed_4
+            if self.firedropCostume_Index_Right >= 29:
+                self.animationSpeed_4 = 0
+            elif self.firedropCostume_Index_Right == 0:
+                self.animationSpeed_4 = 1
+
+        if self.activate_4 == True:
+            self.image_firedrop_flipped = self.firedrop_flipped[int(self.firedropCostume_Index_Left)]
+            self.firedropCostume_Index_Left += self.animationSpeed_5
+            if self.firedropCostume_Index_Left >= 29:
+                self.animationSpeed_5 = 0
+            elif self.firedropCostume_Index_Left == 0:
+                self.animationSpeed_5 = 1
 
     def timingObstacles(self, start_time):
         self.start_time = start_time
-        self.timer = "%.1f" %((pygame.time.get_ticks()-self.start_time)/1000)
+        self.timer_precise = float("%.4f" %((pygame.time.get_ticks()-self.start_time)/1000))
+        self.timer = "%.1f" %self.timer_precise
         self.timer = float(self.timer)
-        print(self.timer)
+        # print(self.timer_precise)
 
     def queue(self, surface):
         self.image_fireball_flipped = pygame.transform.flip(self.image_fireball, True, False)
-        #horizontal fire balls
+        #PHASE 1: horizontal fire balls
 #cycle 1
         if 4 >= self.timer >= 0:
             surface.blit(self.image_fireball, self.rect_fireball_1)
@@ -154,7 +196,6 @@ class Obstacle(pygame.sprite.Sprite):
         elif self.timer == 11.1:
             self.rect_fireball_3.midbottom = self.coords_under
             self.rect_fireball_6.midbottom = self.coords_top
-
 #cycle 3 (last)
         if 12.7 >= self.timer >= 8.7:
             surface.blit(self.image_fireball, self.rect_fireball_1)
@@ -185,15 +226,15 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect_fireball_3.midbottom = self.coords_untouched
             self.rect_fireball_6.midbottom = self.coords_untouched
 
-        #flame pillar and fire-ground
+        #PHASE 2: flame pillar and fire-ground
 #fireground
-        if 16> self.timer >= 15.4:
+        if 15.7> self.timer >= 15.4:
             if self.activate_2 == False:
                 self.activate_2 = True
                 self.rect_fireground.midbottom = (380,405)
             else:
                 surface.blit(self.image_fireground, self.rect_fireground)
-        elif self.timer == 16.1:
+        elif self.timer == 15.8:
             self.activate_2 = False
             self.rect_fireground.midbottom = self.coords_untouched
 #pillar      
@@ -210,6 +251,30 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect_firepillar_1.midbottom = self.coords_untouched
             self.rect_firepillar_2.midbottom = self.coords_untouched
             
+        #PHASE: Meteor with beats
+#Right Meteor
+        if self.timer >= 16.5:
+            if self.activate_3 == False:
+                self.activate_3 = True
+            else:
+                surface.blit(self.image_firedrop, self.rect_firedrop_right)
+                self.rect_firedrop_right.x -= 0.87*25
+                self.rect_firedrop_right.y += 0.5*25
+                if self.rect_firedrop_right.y >= 640:
+                    self.rect_firedrop_right.midbottom = self.coords_MeteorR
+                    self.firedropCostume_Index_Right = 0
+#Left Meteor
+        if self.timer_precise >= 16.85:
+            if self.activate_4 == False:
+                self.activate_4 = True
+            else:
+                surface.blit(self.image_firedrop_flipped, self.rect_firedrop_left)
+                self.rect_firedrop_left.x += 0.87*25
+                self.rect_firedrop_left.y += 0.5*25
+                if self.rect_firedrop_left.y >= 640:
+                    self.rect_firedrop_left.midbottom = self.coords_MeteorL
+                    self.firedropCostume_Index_Left = 0
+
     def setRect_fireball(self, num):
         var_name = 'rect_fireball_'+str(num)
         self.rect = getattr(self, var_name)
@@ -222,9 +287,17 @@ class Obstacle(pygame.sprite.Sprite):
         var_name = 'rect_fireground'
         self.rect = getattr(self, var_name)
 
+    def setRect_firedrop(self, num):
+        if num == 1:
+            var_name = 'rect_firedrop_right'
+            self.rect = getattr(self, var_name)
+        elif num == 2:
+            var_name = 'rect_firedrop_left'
+            self.rect = getattr(self, var_name)
+
     def update(self, screen, start_time):
-        self.animation()
         self.timingObstacles(start_time)
+        self.animation()
         self.queue(screen)
 
 
