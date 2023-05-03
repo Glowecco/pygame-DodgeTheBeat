@@ -24,8 +24,12 @@ class Obstacle(pygame.sprite.Sprite):
         self.activate_2 = False
         self.activate_3 = False
         self.activate_4 = False
+        self.activate_5 = False
+        self.activate_6 = False
         self.alpha = 400
         self.runthis = False
+        self.coords_MeteorR_2 = (750, 120)
+        self.coords_MeteorL_2 = (0,100)
 
         #setup images
         self.temporary_fireball = pygame.image.load('fires/fireball/Fireball_1.png').convert_alpha()
@@ -51,6 +55,12 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect_fireground = self.temporary_fireground.get_rect(midbottom = self.coords_untouched)
         self.rect_firedrop_right = self.temporary_firedrop.get_rect(midbottom = self.coords_MeteorR)
         self.rect_firedrop_left = self.temporary_firedrop_flipped.get_rect(midbottom = self.coords_MeteorL)
+
+        self.meteor_right = pygame.Rect(0, 0, 70, 70)
+        self.meteor_right.midbottom = (self.coords_MeteorR_2)
+
+        self.meteor_left = pygame.Rect(0, 0, 70, 70)
+        self.meteor_left.midbottom = (self.coords_MeteorL_2)
 
         #load animation cuts
         self.fireball = []
@@ -86,11 +96,14 @@ class Obstacle(pygame.sprite.Sprite):
             self.firedrop_flipped.append(self.temporary_firedrop)
     def animation(self):
         self.image_fireball = self.fireball[int(self.fireballCostume_Index)]
-        self.fireballCostume_Index += self.animationSpeed_1
-        if self.fireballCostume_Index >= 7.6:
-            self.animationSpeed_1 = - 0.3
-        elif self.fireballCostume_Index < 2.4:
-            self.animationSpeed_1 = 0.3
+        self.image_fireball_flipped = pygame.transform.flip(self.image_fireball, True, False)
+
+        if self.timer_precise <=16:
+            self.fireballCostume_Index += self.animationSpeed_1
+            if self.fireballCostume_Index >= 7.6:
+                self.animationSpeed_1 = - 0.3
+            elif self.fireballCostume_Index < 2.4:
+                self.animationSpeed_1 = 0.3
         
         if self.activate_1 == True:
             self.image_firepillar = self.firepillar[int(self.firepillarCostume_Index)]
@@ -131,14 +144,12 @@ class Obstacle(pygame.sprite.Sprite):
     def timingObstacles(self, start_time):
         self.start_time = start_time
         self.timer_precise = float("%.4f" %((pygame.time.get_ticks()-self.start_time)/1000))
-        self.timer = "%.1f" %self.timer_precise
-        self.timer = float(self.timer)
-        # print(self.timer_precise)
+        self.timer = float("%.1f" %self.timer_precise)
+        print(self.timer_precise)
 
     def queue(self, surface):
-        self.image_fireball_flipped = pygame.transform.flip(self.image_fireball, True, False)
-        #PHASE 1: horizontal fire balls
-#cycle 1
+#PHASE 1: horizontal fire balls
+        #cycle 1
         if 4 >= self.timer >= 0:
             surface.blit(self.image_fireball, self.rect_fireball_1)
             self.rect_fireball_1.x += 4
@@ -167,7 +178,7 @@ class Obstacle(pygame.sprite.Sprite):
         elif self.timer == 6.8:
             self.rect_fireball_3.midbottom = self.coords_under
             self.rect_fireball_6.midbottom = self.coords_top            
-#cycle 2
+        #cycle 2
         if 8.5 >= self.timer >= 4.5:
             surface.blit(self.image_fireball, self.rect_fireball_1)
             self.rect_fireball_1.x += 4
@@ -196,7 +207,7 @@ class Obstacle(pygame.sprite.Sprite):
         elif self.timer == 11.1:
             self.rect_fireball_3.midbottom = self.coords_under
             self.rect_fireball_6.midbottom = self.coords_top
-#cycle 3 (last)
+        #cycle 3 (last)
         if 12.7 >= self.timer >= 8.7:
             surface.blit(self.image_fireball, self.rect_fireball_1)
             self.rect_fireball_1.x += 4
@@ -226,8 +237,8 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect_fireball_3.midbottom = self.coords_untouched
             self.rect_fireball_6.midbottom = self.coords_untouched
 
-        #PHASE 2: flame pillar and fire-ground
-#fireground
+#PHASE 2: flame pillar and fire-ground
+        #fireground
         if 15.7> self.timer >= 15.4:
             if self.activate_2 == False:
                 self.activate_2 = True
@@ -237,7 +248,7 @@ class Obstacle(pygame.sprite.Sprite):
         elif self.timer == 15.8:
             self.activate_2 = False
             self.rect_fireground.midbottom = self.coords_untouched
-#pillar      
+        #pillar      
         if 16> self.timer >= 15.4:
             if self.activate_1 == False:
                 self.activate_1 = True
@@ -251,29 +262,116 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect_firepillar_1.midbottom = self.coords_untouched
             self.rect_firepillar_2.midbottom = self.coords_untouched
             
-        #PHASE: Meteor with beats
-#Right Meteor
-        if self.timer >= 16.5:
+#PHASE 3: Meteor with beats
+        #Right Meteor
+        if 23 > self.timer >= 16.5: 
             if self.activate_3 == False:
                 self.activate_3 = True
             else:
                 surface.blit(self.image_firedrop, self.rect_firedrop_right)
+                # pygame.draw.circle(surface, (255, 0, 0), self.meteor_right.center, 50) # show rectangle(red circle)
                 self.rect_firedrop_right.x -= 0.87*25
                 self.rect_firedrop_right.y += 0.5*25
-                if self.rect_firedrop_right.y >= 640:
+                self.meteor_right.x -= 0.87*30
+                self.meteor_right.y += 0.5*30
+                if self.rect_firedrop_right.y >= 660:
                     self.rect_firedrop_right.midbottom = self.coords_MeteorR
                     self.firedropCostume_Index_Right = 0
-#Left Meteor
-        if self.timer_precise >= 16.85:
+                    self.meteor_right.midbottom = self.coords_MeteorR_2
+    
+        #Left Meteor
+        if 23 > self.timer_precise >= 16.85: #16.85
             if self.activate_4 == False:
                 self.activate_4 = True
             else:
                 surface.blit(self.image_firedrop_flipped, self.rect_firedrop_left)
+                # pygame.draw.circle(surface, (255, 0, 0), self.meteor_left.center, 50) # show rectangle(red circle)
                 self.rect_firedrop_left.x += 0.87*25
                 self.rect_firedrop_left.y += 0.5*25
-                if self.rect_firedrop_left.y >= 640:
+                self.meteor_left.x += 0.87*30
+                self.meteor_left.y += 0.5*30
+                if self.rect_firedrop_left.y >= 660:
                     self.rect_firedrop_left.midbottom = self.coords_MeteorL
                     self.firedropCostume_Index_Left = 0
+                    self.meteor_left.midbottom = self.coords_MeteorL_2
+
+#PHASE 4: Spreading bullets
+        #Right side 1
+        if 25 > self.timer >= 23: #23
+            if self.activate_5 == False:
+                self.activate_5 = True
+                self.rect_fireball_4.midbottom = (800, 100)
+                self.rect_fireball_5.midbottom = (800, 100)
+                self.rect_fireball_6.midbottom = (800, 100)
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_4)
+            self.rect_fireball_4.x -= 4
+            self.rect_fireball_4.y += 8
+        if 25.2 > self.timer >= 23.2: 
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_5)
+            self.rect_fireball_5.x -= 6
+            self.rect_fireball_5.y += 8
+        if 25.4 > self.timer >= 23.4: 
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_6)
+            self.rect_fireball_6.x -= 10
+            self.rect_fireball_6.y += 8
+        if self.timer == 26:
+            self.activate_5 = False
+        #Left side 1
+        if 27 > self.timer >= 25: #23
+            if self.activate_6 == False:
+                self.activate_6 = True
+                self.rect_fireball_1.midbottom = (0, 100)
+                self.rect_fireball_2.midbottom = (0, 100)
+                self.rect_fireball_3.midbottom = (0, 100)
+            surface.blit(self.image_fireball, self.rect_fireball_1)
+            self.rect_fireball_1.x += 4
+            self.rect_fireball_1.y += 8
+        if 27.2 > self.timer >= 25.2: 
+            surface.blit(self.image_fireball, self.rect_fireball_2)
+            self.rect_fireball_2.x += 6
+            self.rect_fireball_2.y += 8
+        if 27.4 > self.timer >= 25.4: 
+            surface.blit(self.image_fireball, self.rect_fireball_3)
+            self.rect_fireball_3.x += 10
+            self.rect_fireball_3.y += 8
+        if self.timer == 28:
+            self.activate_6 = False
+        #Right side 2
+        if 29 > self.timer >= 27: #23
+            if self.activate_5 == False:
+                self.activate_5 = True
+                self.rect_fireball_4.midbottom = (800, 100)
+                self.rect_fireball_5.midbottom = (800, 100)
+                self.rect_fireball_6.midbottom = (800, 100)
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_4)
+            self.rect_fireball_4.x -= 4
+            self.rect_fireball_4.y += 8
+        if 29.2 > self.timer >= 27.2: 
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_5)
+            self.rect_fireball_5.x -= 6
+            self.rect_fireball_5.y += 8
+        if 29.4 > self.timer >= 27.4: 
+            surface.blit(self.image_fireball_flipped, self.rect_fireball_6)
+            self.rect_fireball_6.x -= 10
+            self.rect_fireball_6.y += 8
+        #Left side 2
+        if 31 > self.timer >= 29: #23
+            if self.activate_6 == False:
+                self.activate_6 = True
+                self.rect_fireball_1.midbottom = (0, 100)
+                self.rect_fireball_2.midbottom = (0, 100)
+                self.rect_fireball_3.midbottom = (0, 100)
+            surface.blit(self.image_fireball, self.rect_fireball_1)
+            self.rect_fireball_1.x += 4
+            self.rect_fireball_1.y += 8
+        if 31.2 > self.timer >= 29.2: 
+            surface.blit(self.image_fireball, self.rect_fireball_2)
+            self.rect_fireball_2.x += 6
+            self.rect_fireball_2.y += 8
+        if 31.4 > self.timer >= 29.4: 
+            surface.blit(self.image_fireball, self.rect_fireball_3)
+            self.rect_fireball_3.x += 10
+            self.rect_fireball_3.y += 8
 
     def setRect_fireball(self, num):
         var_name = 'rect_fireball_'+str(num)
@@ -289,10 +387,10 @@ class Obstacle(pygame.sprite.Sprite):
 
     def setRect_firedrop(self, num):
         if num == 1:
-            var_name = 'rect_firedrop_right'
+            var_name = 'meteor_right'
             self.rect = getattr(self, var_name)
         elif num == 2:
-            var_name = 'rect_firedrop_left'
+            var_name = 'meteor_left'
             self.rect = getattr(self, var_name)
 
     def update(self, screen, start_time):

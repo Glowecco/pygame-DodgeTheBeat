@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
-            self.gravity = -8.5
+            self.gravity = -8.5 #debug: -11.5
         #left and right
         if keys[pygame.K_LEFT]:
             self.rect.left -= 4

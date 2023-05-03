@@ -33,7 +33,7 @@ def level1(screen, clock):
     obstacles_sprite = obstacles.sprites()[0]
     
     #main loop
-    # bgm1.play()
+    bgm1.play()
     while True:
         #check for quit 
         for event in pygame.event.get():
@@ -62,20 +62,20 @@ def level1(screen, clock):
             obstacles_sprite.setRect_fireball(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
-                #print('collided!'+str(i))
+                print('collided!'+str(i))
                 #Alive = False
                 pass
         for i in range(1,3):
             obstacles_sprite.setRect_firepillar(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
-                #print('collide PILLAR'+str(i))
+                print('collide PILLAR'+str(i))
                 #Alive = False
                 pass
         obstacles_sprite.setRect_fireground()
         collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
         if collision:
-            #print('collide FIRE GROUND')
+            print('collide FIRE GROUND')
             #Alive = False
             pass
         for i in range(1,3):
@@ -86,8 +86,6 @@ def level1(screen, clock):
                     print('collide RIGHT METEOR')
                 elif i == 2:
                     print('collide LEFT METEOR')
-                #Alive = False
-                pass
 
         #fps
         clock.tick(60)
