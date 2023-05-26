@@ -3,23 +3,28 @@ from Class_player import Player
 from Class_obstacles import Obstacle
 from sys import exit
 
-timer_term = 0
-official_timer = 0
-
 def level1(screen, clock):
     # setup
     pygame.init()
     Alive = True
-
+    DEBUGGING_MODE = 3
+    '''
+    __DEBUGGING_MODE manual__
+    1: dies on collision 
+    2: dies on collision & prints collision
+    3: immortal & prints collisions
+    4: immortal & doesn't print any collision
+    set the mode to 1 for intended gameplay
+    '''
     #constants
     bgm1 = pygame.mixer.Sound('mp3/bgm.mp3')
     bgm1.set_volume(0.4)
     start_time = pygame.time.get_ticks()
 
     #background surfaces
-    background = pygame.image.load('bgi/sky.png').convert()
+    background = pygame.image.load('images_background/sky.png').convert()
     background = pygame.transform.scale(background, (810, 510))
-    platform = pygame.image.load('bgi/ground.png').convert_alpha()
+    platform = pygame.image.load('images_background/ground.png').convert_alpha()
     platform = pygame.transform.scale(platform, (700, 100))
 
     #setup Player class
@@ -62,31 +67,90 @@ def level1(screen, clock):
             obstacles_sprite.setRect_fireball(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
-                print('collided!'+str(i))
-                #Alive = False
-                pass
+                if DEBUGGING_MODE==1:
+                    Alive = False
+                elif DEBUGGING_MODE==2:
+                    print('collided FIRE BALL '+str(i))
+                    Alive = False
+                elif DEBUGGING_MODE==3:
+                    print('collided FIRE BALL '+str(i))
+                else:
+                    pass
         for i in range(1,3):
             obstacles_sprite.setRect_firepillar(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
-                print('collide PILLAR'+str(i))
-                #Alive = False
-                pass
+                if DEBUGGING_MODE==1:
+                    Alive = False
+                elif DEBUGGING_MODE==2:
+                    print('collided PILLAR '+str(i))
+                    Alive = False
+                elif DEBUGGING_MODE==3:
+                    print('collided PILLAR '+str(i))
+                else:
+                    pass
         obstacles_sprite.setRect_fireground()
         collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
         if collision:
-            print('collide FIRE GROUND')
-            #Alive = False
-            pass
+            if DEBUGGING_MODE==1:
+                Alive = False
+            elif DEBUGGING_MODE==2:
+                print('collided FIRE GROUND')
+                Alive = False
+            elif DEBUGGING_MODE==3:
+                print('collided FIRE GROUND')
+            else:
+                pass
         for i in range(1,3):
             obstacles_sprite.setRect_firedrop(i)
             collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
             if collision:
                 if i == 1:
-                    print('collide RIGHT METEOR')
+                    if DEBUGGING_MODE==1:
+                        Alive = False
+                    elif DEBUGGING_MODE==2:
+                        print('collided RIGHT METEOR')
+                        Alive = False
+                    elif DEBUGGING_MODE==3:
+                        print('collided RIGHT METEOR')
+                    else:
+                        pass
                 elif i == 2:
-                    print('collide LEFT METEOR')
-
+                    if DEBUGGING_MODE==1:
+                        Alive = False
+                    elif DEBUGGING_MODE==2:
+                        print('collided LEFT METEOR')
+                        Alive = False
+                    elif DEBUGGING_MODE==3:
+                        print('collided LEFT METEOR')
+                    else:
+                        pass
+        obstacles_sprite.setRect_firepop()
+        collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
+        if collision:
+            if DEBUGGING_MODE==1:
+                Alive = False
+            elif DEBUGGING_MODE==2:
+                print('collided FIRE POP')
+                Alive = False
+            elif DEBUGGING_MODE==3:
+                print('collided FIRE POP')
+            else:
+                pass
+                
+        obstacles_sprite.setRect_flamethrow()
+        collision = pygame.sprite.spritecollide(player_sprite, obstacles, False)
+        if collision:
+            if DEBUGGING_MODE==1:
+                Alive = False
+            elif DEBUGGING_MODE==2:
+                print('collided FLAMETHROW')
+                Alive = False
+            elif DEBUGGING_MODE==3:
+                print('collided FLAMETHROW')
+            else:
+                pass
+                
         #fps
         clock.tick(60)
 

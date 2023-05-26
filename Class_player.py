@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.doublejump_available = False
 
         #setup image and rect
-        self.image = pygame.image.load('playerStand/rabbit -1.png').convert_alpha()
+        self.image = pygame.image.load('images_player/playerStand/rabbit -1.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (27, 42))
         self.rect = self.image.get_rect(midbottom = (400,350))
 
@@ -25,14 +25,14 @@ class Player(pygame.sprite.Sprite):
         self.stand = []
         self.run = []
         for i in range(1, 9):
-            filename = f"{'playerStand/rabbit -'}{i}{'.png'}"
+            filename = f"{'images_player/playerStand/rabbit -'}{i}{'.png'}"
             temporary_image = pygame.image.load(filename).convert_alpha()
             temporary_image = pygame.transform.scale(temporary_image, (27, 42))
             self.stand.append(temporary_image)
-        self.jump = pygame.image.load('playerJump/rabbit jump -2.png').convert_alpha()
+        self.jump = pygame.image.load('images_player/playerJump/rabbit jump -2.png').convert_alpha()
         self.jump = pygame.transform.scale(self.jump, (28, 45))
         for i in range(1, 11):
-            filename = f"{'playerRun/rabbit run -'}{i}{'.png'}"
+            filename = f"{'images_player/playerRun/rabbit run -'}{i}{'.png'}"
             temporary_image = pygame.image.load(filename).convert_alpha()
             temporary_image = pygame.transform.scale(temporary_image, (30, 43.5))
             self.run.append(temporary_image)
@@ -87,7 +87,8 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
-            self.gravity = -8.5 #debug: -11.5
+            # print('jumped')
+            self.gravity = -8.5 #debug with -11.5
         #left and right
         if keys[pygame.K_LEFT]:
             self.rect.left -= 4
