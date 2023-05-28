@@ -9,7 +9,12 @@ The game's artwork might look a little rough since I am trying to keep as much a
 ### How to Run the game
 Run the 'engine.py' file.
 
+### Gameplay
+- The player can be controlled with arrow keys(Left, Right, and Jump).
+- If you have noticed your player is invincible it is because the game is yet in debugging mode. Adjust the "DEBUGGING_MODE" variable found in 'game.py' file in order to toggle off the invincibility of the player. Instructions are commented within the 'game.py' file.
+
 ### Links
 Original game on scratch: [Link](https://scratch.mit.edu/projects/172581869/)
 
 Building in VSC
+This game is under MIT License
