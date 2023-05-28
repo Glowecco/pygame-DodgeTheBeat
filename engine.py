@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+
 from game import level1 #importing levels from "game.py"
 
 #Menu screen
