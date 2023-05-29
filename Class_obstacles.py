@@ -205,7 +205,6 @@ class Obstacle(pygame.sprite.Sprite):
             self.image_fireground.set_alpha(self.alpha)
             if self.firegroundCostume_Index >= 7.5:
                 self.firegroundCostume_Index = 0
-
             if self.alpha < 0:
                 pass
             else:

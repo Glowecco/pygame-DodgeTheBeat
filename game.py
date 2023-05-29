@@ -1,4 +1,5 @@
 import pygame
+from time import sleep
 from Class_player import Player
 from Class_obstacles import Obstacle
 
@@ -7,8 +8,11 @@ from sys import exit
 def level1(screen, clock):
     # setup
     pygame.init()
+    fade = 0
+    death = False
+    countdown = 0
     Alive = True
-    DEBUGGING_MODE = 2
+    DEBUGGING_MODE = 1
     '''
     __DEBUGGING_MODE manual__ (input 1~4)
     ____________________________ ______________________________ _______________________ _______________                         
@@ -43,15 +47,29 @@ def level1(screen, clock):
     #main loop
     bgm1.play()
     while True:
+        time = int(pygame.time.get_ticks()/100)
         #check for quit 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 bgm1.stop()
                 pygame.quit()
                 exit()
-        if Alive == False:
+        if Alive == False and death == False:
+            countdown = time+1
+            death = True
+
+        if countdown == time:        
             bgm1.stop()
+            blackscreen = pygame.Surface((800,500))
+            blackscreen.fill((0, 0, 0))
+            while fade < 150:
+                blackscreen.set_alpha(fade)
+                screen.blit(blackscreen, (0,0))
+                fade += 3
+                pygame.display.flip()
+                clock.tick(60)
             break
+
 
         #draw background
         screen.blit(background, (0,0))
