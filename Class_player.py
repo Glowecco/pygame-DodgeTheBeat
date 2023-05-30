@@ -1,6 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
+    dash_on = True
     def __init__(self):
         super().__init__()
         
@@ -15,6 +16,9 @@ class Player(pygame.sprite.Sprite):
         self.ALIVE = True
         self.higher = False
         self.doublejump_available = False
+        self.x_vel = 4
+        self.on_cooldown = False
+        self.pressed_time = 0
 
         #setup image and rect
         self.image = pygame.image.load('images_player/playerStand/rabbit -1.png').convert_alpha()
@@ -87,20 +91,34 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
-            # print('jumped')
-            self.gravity = -8.5 #debug with -11.5
+            self.gravity = -8.5 
         #left and right
         if keys[pygame.K_LEFT]:
-            self.rect.left -= 4
+            self.rect.left -= self.x_vel
             self.flipLeft = True
             self.running = True
         elif keys[pygame.K_RIGHT]:
-            self.rect.right += 4
+            self.rect.right += self.x_vel
             self.flipLeft = False
             self.running = True
         else:
             self.running = False  
-          
+        #skill
+        if keys[pygame.K_x] and self.on_cooldown == False:
+            self.pressed_time = int(pygame.time.get_ticks()/100)
+            self.on_cooldown = True
+            self.x_vel = 10
+            self.gravity -= 3
+            Player.dash_on = False
+        if self.x_vel > 4:
+            self.x_vel -= 0.15
+        elif self.x_vel <4:
+            self.x_vel = 4
+        #skill cooldown (5 seconds)
+        if (self.pressed_time+50) == (int(pygame.time.get_ticks()/100)):
+            self.on_cooldown = False
+            Player.dash_on = True
+
     def update(self):
         self.movements()
         self.physicsLogic()

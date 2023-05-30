@@ -35,10 +35,11 @@ pygame.display.set_caption('Dodge the Beat')
 
 #constants
 clock = pygame.time.Clock()
-font = pygame.font.Font('font/OpenSans-Regular.ttf', 50)
+font = pygame.font.Font('font/AspectRatio-3D.ttf', 25)
+textfont = pygame.font.Font('font/The Brownies.otf', 25)
 
 #START
 while True:
     startMenu(screen)
-    level1(screen, clock)
+    level1(screen, clock, font, textfont)
     # level2(screen, clock)

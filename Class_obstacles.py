@@ -2,6 +2,7 @@ import pygame
 import random
 
 class Obstacle(pygame.sprite.Sprite):
+    timer = 0
     def __init__(self):
         super().__init__()
         
@@ -17,7 +18,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.firedropCostume_Index_Left = 0
         self.animationSpeed_5 = 1
         self.firepopCostume_Index = 0
-        self.animationSpeed_6 = 0.2
+        self.animationSpeed_6 = 0.25
         self.flamethrowCostume_Index = 0
         self.animationSpeed_7 = 0.4
         self.meteorCostume_Index = 0
@@ -36,7 +37,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.coords_DropL = (100,330)
         self.coords_DropR_2 = (750, 120)
         self.coords_DropL_2 = (0,100)
-        self.coords_firepop = (300,400)
+        self.y_coords_firepop = 354
         self.coords_untouched = (0,0)
         self.coords_flamethrow = (360,360)
         self.activate_pillar = False
@@ -56,7 +57,6 @@ class Obstacle(pygame.sprite.Sprite):
         self.activate_flamefall4 = False
         self.alpha = 400
         self.firepop_relocate = True
-        self.firepop_transition = True
 
         #setup images
         self.temporary_fireball = pygame.image.load('images_obstacles/fireball/Fireball_1.png').convert_alpha()
@@ -77,6 +77,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.temporary_meteor = pygame.transform.scale(self.temporary_flamethrow, (32, 32))
         self.temporary_flamefall = pygame.image.load('images_obstacles/firedrop/firedrop_1.png').convert_alpha()
         self.temporary_flamefall = pygame.transform.scale(self.temporary_flamefall, (150,528))
+        self.hint = pygame.image.load('images_obstacles/hint.png').convert_alpha()
+        self.hint = pygame.transform.scale(self.hint, (500,400))
 
         #setup rects
         self.rect_dummy = self.temporary_fireball.get_rect(midbottom = self.coords_untouched)
@@ -95,7 +97,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.bigdrop_r.midbottom = (self.coords_DropR_2)
         self.bigdrop_l = pygame.Rect(0, 0, 70, 70)
         self.bigdrop_l.midbottom = (self.coords_DropL_2)
-        self.rect_firepop = self.temporary_firepop.get_rect(midbottom = self.coords_firepop)
+        self.rect_firepop = self.temporary_firepop.get_rect(midbottom = self.coords_untouched)
         self.rect_flamethrow = self.temporary_flamethrow.get_rect(midbottom = self.coords_untouched)
         self.rect_flamethrow_hitbox = pygame.Rect(0, 0, 570, 40)
         self.rect_flamethrow_hitbox.midbottom = self.coords_untouched
@@ -229,10 +231,8 @@ class Obstacle(pygame.sprite.Sprite):
         if self.activate_firepop == True:
             self.image_firepop = self.firepop[int(self.firepopCostume_Index)]
             self.firepopCostume_Index += self.animationSpeed_6
-            self.firepop_transition = False
             if self.firepopCostume_Index >= 6:
-                self.firepop_transition = True
-                self.animationSpeed_6 = 0.03
+                self.animationSpeed_6 = 0.024
                 if self.firepop_relocate ==True:
                     self.rect_firepop.x = random.randint(40, 700)
                     self.firepop_relocate = False
@@ -240,7 +240,7 @@ class Obstacle(pygame.sprite.Sprite):
                     if self.firepopCostume_Index >= 6.95:
                         self.activate_firepop = False
                         self.firepopCostume_Index = 0
-                        self.animationSpeed_6 = 0.21 
+                        self.animationSpeed_6 = 0.29 
 
         if self.activate_flamethrow == True:
             if self.timer <= 33:
@@ -291,6 +291,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.start_time = start_time
         self.timer_precise = float("%.4f" %((pygame.time.get_ticks()-self.start_time)/1000))
         self.timer = float("%.1f" %self.timer_precise)
+        Obstacle.timer = self.timer
         if self.DEBUGGING_MODE == 1 or self.DEBUGGING_MODE == 3:
             pass
         else:
@@ -449,14 +450,17 @@ class Obstacle(pygame.sprite.Sprite):
 
 #PHASE 4: Spreading bullets and Fire pops
         #activate fire pops
-        if 44 > self.timer >= 23:
+        if 44 > self.timer >= 22.7:
             if self.activate_firepop == False:
+                self.rect_firepop.y = self.y_coords_firepop
                 self.activate_firepop = True
                 self.firepop_relocate = True
             else:
                 surface.blit(self.image_firepop, self.rect_firepop)
-        elif self.timer == 41:
+        elif self.timer == 44.1:
             self.activate_firepop = False
+            self.rect_firepop.midbottom = self.coords_untouched
+
         #Right side 1
         if 25 > self.timer >= 23: #23
             if self.activate_fireballA == False:
@@ -665,10 +669,10 @@ class Obstacle(pygame.sprite.Sprite):
         if 54.5 > self.timer >= 45:#
             if self.activate_meteor == False:
                 rand_coords = set()
-                exclude = random.randint(-300, 270)
+                self.exclude = random.randint(-300, 270)
                 while len(rand_coords) < 12:
                     random_number = random.randrange(-310, 331, 10)
-                    if exclude <= random_number <= exclude + 150:
+                    if self.exclude <= random_number <= self.exclude + 150:
                         continue
                     rand_coords.add(random_number)
                 rand_coords = list(rand_coords)
@@ -783,10 +787,16 @@ class Obstacle(pygame.sprite.Sprite):
         #activate fire pops
         if 55 > self.timer >= 46:
             if self.activate_firepop == False:
+                self.rect_firepop.y = self.y_coords_firepop
                 self.activate_firepop = True
                 self.firepop_relocate = True
             else:
                 surface.blit(self.image_firepop, self.rect_firepop)
+        elif self.timer == 55.1:
+            self.rect_firepop.midbottom = self.coords_untouched
+
+        if 56.9 > self.timer >= 56.3:
+            surface.blit(self.hint, (280,2))
 
 #PHASE 8: Flame fall (end)
         benchmark_phase8 = 56.5 
@@ -930,10 +940,10 @@ class Obstacle(pygame.sprite.Sprite):
 
     def setRect_firepop(self):
         var_name = 'rect_firepop'
-        if self.firepop_transition == False:
-            self.rect = getattr(self, var_name)
-        else:
+        if self.firepopCostume_Index >= 3:
             self.rect = self.rect_dummy
+        else:
+            self.rect = getattr(self, var_name)
     
     def setRect_flamethrow(self):
         var_name = 'rect_flamethrow_hitbox'
@@ -941,7 +951,10 @@ class Obstacle(pygame.sprite.Sprite):
 
     def setRect_meteor(self, num):
         var_name = 'rect_meteor'+str(num)
-        self.rect = getattr(self, var_name)
+        if self.meteorCostume_Index >= 6:
+            self.rect = self.rect_dummy
+        else:
+            self.rect = getattr(self, var_name)
 
     def setRect_flamefall(self, num):
         var_name = 'rect_flamefall_hitbox'+str(num)
