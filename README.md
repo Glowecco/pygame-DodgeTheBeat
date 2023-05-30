@@ -11,10 +11,11 @@ Run the 'engine.py' file.
 
 ### Gameplay
 - The player can be controlled with arrow keys(Left, Right, and Jump).
+- The player can dash pressing 'x' key.
 - If you have noticed your player is invincible it is because the game is yet in debugging mode. Adjust the "DEBUGGING_MODE" variable found in 'game.py' file in order to toggle off the invincibility of the player. Instructions are commented within the 'game.py' file.
 
 ### Links
 Original game on scratch: [Link](https://scratch.mit.edu/projects/172581869/)
 
 Building in VSC
-This game is under MIT License
+This game is under Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND) license. Please contact to atfwb02@gmail.com for question regarding liscense. 
