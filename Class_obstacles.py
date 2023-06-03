@@ -917,6 +917,12 @@ class Obstacle(pygame.sprite.Sprite):
                     if self.DEBUGGING_MODE == 3 or self.DEBUGGING_MODE == 4:
                         pygame.draw.rect(surface, (255,0,0), self.rect_flamefall_hitbox4)
                     self.rect_flamefall_hitbox4.y += 20
+        
+        if self.timer == 3.6+benchmark_phase8:
+            self.rect_flamefall_hitbox1.midbottom = self.coords_untouched
+            self.rect_flamefall_hitbox2.midbottom = self.coords_untouched
+            self.rect_flamefall_hitbox3.midbottom = self.coords_untouched
+            self.rect_flamefall_hitbox4.midbottom = self.coords_untouched
 
     def setRect_fireball(self, num):
         var_name = 'rect_fireball_'+str(num)
