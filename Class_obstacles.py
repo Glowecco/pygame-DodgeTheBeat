@@ -187,7 +187,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.image_fireball = self.fireball[int(self.fireballCostume_Index)]
         self.image_fireball_flipped = pygame.transform.flip(self.image_fireball, True, False)
 
-        if self.timer_precise <=16:
+        if self.timer <16 or 28 < self.timer < 44:
             self.fireballCostume_Index += self.animationSpeed_1
             if self.fireballCostume_Index >= 7.6:
                 self.animationSpeed_1 = - 0.3

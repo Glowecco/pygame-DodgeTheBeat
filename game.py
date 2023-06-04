@@ -6,7 +6,7 @@ from Class_obstacles import Obstacle
 
 from sys import exit
 
-def level1(screen, clock, font, textfont):
+def level1(screen, clock, font, textfont, winner, skill_selection):
     # setup
     pygame.init()
     volume = 0.5
@@ -149,7 +149,7 @@ def level1(screen, clock, font, textfont):
         
         #update and draw player
         if death == False:
-            player.update()
+            player.update(skill_selection)
         player.draw(screen)
         
         if ingame_timer >= 15.5 and flash > 0:
@@ -160,7 +160,8 @@ def level1(screen, clock, font, textfont):
         
         #draw icon and timer
         screen.blit(cornerbox, (710,0)) 
-        screen.blit(staricon, (-20,-5))
+        if winner == True:
+            screen.blit(staricon, (-20,-5))
         if Player.dash_on == True:
             dashicon.set_alpha(dashicon_fade)
             if dashicon_fade < 255:
@@ -338,11 +339,16 @@ def level1(screen, clock, font, textfont):
         #rect
     rect_backBut = backBut.get_rect(midbottom = (550,520))
         #variables
-    backBut_show = "Black"
     gameover_screen = random.choice([end1, end2, end3, end4, end5])
     
     #win
     if win == True:
+        backBut_show = "Green"
+        black_surface = pygame.Surface((800, 500))
+        black_surface.fill((0, 0, 0))
+        screen.blit(black_surface, (0, 0))
+        rect_backBut.midbottom = (630,480)
+
         winscreen = True
         while winscreen:
             for event in pygame.event.get():
@@ -351,27 +357,38 @@ def level1(screen, clock, font, textfont):
                     exit()
                 elif event.type == pygame.MOUSEMOTION:
                     if rect_backBut.collidepoint(event.pos):
-                        backBut_show = "Green"
+                        backBut_show = "White"
                     else:
-                        backBut_show = "Black"
+                        backBut_show = "Green"
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 and rect_backBut.collidepoint(event.pos):
-                        backBut_show = "White"
+                        backBut_show = "Black"
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1 and rect_backBut.collidepoint(event.pos):
-                        endscreen = False
+                        winscreen = False
             if backBut_show == "Black":
                 screen.blit(backBut, rect_backBut)
             elif backBut_show == "Green":
                 screen.blit(backBut_select, rect_backBut)
             else:
                 screen.blit(backBut_click, rect_backBut)
-            screen.blit(gameover_screen,(0,0))
+            
+            textfont = pygame.font.Font('font/The Brownies.otf', 50)
+            text = textfont.render('You Survived 60 Seconds!', True, (180,214,178))
+            screen.blit(text, (250,150))
+            text = textfont.render('Level 2, Unlocked', True, (180,214,178))
+            screen.blit(text, (250,185))
+            textfont = pygame.font.Font('font/OpenSans-Regular.ttf', 25)
+            text = textfont.render('You earned a \'winner star\' on the top left', True, (180,214,178))
+            screen.blit(text, (50,300))
+            
             pygame.display.update()
             #fps
             clock.tick(30)
+        return(True)
     else:
         #gameover
+        backBut_show = "Black"
         coords = (570,240)
         endscreen_alpha=0
         dialogue = random.randint(1,2)
@@ -725,7 +742,7 @@ def level1(screen, clock, font, textfont):
                         backBut_show = "White"
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1 and rect_backBut.collidepoint(event.pos):
-                        endscreen = False
+                        return(ingame_timer)
             if backBut_show == "Black":
                 screen.blit(backBut, rect_backBut)
             elif backBut_show == "Green":

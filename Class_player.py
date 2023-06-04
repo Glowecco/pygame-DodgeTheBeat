@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >600:
             self.ALIVE = False
             
-    def movements(self):
+    def movements(self,skill_selection):
         keys = pygame.key.get_pressed()
         #jump
         if keys[pygame.K_UP] and 420 > self.rect.bottom >= 400 and 740>self.rect.x>33:
@@ -104,22 +104,25 @@ class Player(pygame.sprite.Sprite):
         else:
             self.running = False  
         #skill
-        if keys[pygame.K_x] and self.on_cooldown == False:
-            self.pressed_time = int(pygame.time.get_ticks()/100)
-            self.on_cooldown = True
-            self.x_vel = 10
-            self.gravity -= 3
+        if skill_selection == 1:
+            if keys[pygame.K_x] and self.on_cooldown == False:
+                self.pressed_time = int(pygame.time.get_ticks()/100)
+                self.on_cooldown = True
+                self.x_vel = 10
+                self.gravity -= 3
+                Player.dash_on = False
+            if self.x_vel > 4:
+                self.x_vel -= 0.15
+            elif self.x_vel <4:
+                self.x_vel = 4
+            #skill cooldown (5 seconds)
+            if (self.pressed_time+50) == (int(pygame.time.get_ticks()/100)):
+                self.on_cooldown = False
+                Player.dash_on = True
+        elif skill_selection ==0:
             Player.dash_on = False
-        if self.x_vel > 4:
-            self.x_vel -= 0.15
-        elif self.x_vel <4:
-            self.x_vel = 4
-        #skill cooldown (5 seconds)
-        if (self.pressed_time+50) == (int(pygame.time.get_ticks()/100)):
-            self.on_cooldown = False
-            Player.dash_on = True
 
-    def update(self):
-        self.movements()
+    def update(self, skill_selection):
+        self.movements(skill_selection)
         self.physicsLogic()
         self.animation()
