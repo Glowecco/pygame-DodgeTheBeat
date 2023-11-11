@@ -19,3 +19,8 @@ Original game on scratch: [Link](https://scratch.mit.edu/projects/172581869/)
 
 Building in VSC
 This game is under Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND) license. Please contact to atfwb02@gmail.com for question regarding liscense. 
+
+### Please note the uploaded game on github is a debugging version. I encourage you to try the intended game at:
+https://glowecco.itch.io/blitz-60
+Which is available in .exe application
+
